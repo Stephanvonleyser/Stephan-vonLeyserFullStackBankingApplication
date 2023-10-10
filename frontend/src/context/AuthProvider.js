@@ -76,6 +76,17 @@ export function AuthProvider({ children }) {
         }
     };
 
+    const transferMoney = async (amount, originAccountNumber, destEmail, destAccountNumber) => {
+        try {
+            const config = getConfig(user.token);  
+            const { data } = await clientAxios.post('/account/transfer', { amount, originAccountNumber, destEmail, destAccountNumber }, config);
+            setAuth(data.user);  
+            return { success: true, message: 'Transfer successful!' };
+        } catch (error) {
+            return { success: false, message: error.response.data.message || 'Transfer failed.' };
+        }
+    };
+
 
 
 
@@ -87,7 +98,8 @@ export function AuthProvider({ children }) {
         login,
         logout,
         depositMoney,
-        withdrawMoney  
+        withdrawMoney,
+        transferMoney  
     };
 
     return (
