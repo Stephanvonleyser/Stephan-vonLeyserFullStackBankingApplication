@@ -1,25 +1,38 @@
 import React from 'react';
 import { useAuth } from '../context/AuthProvider';
 import { Navbar, Nav, Button } from 'react-bootstrap'; 
+import { NavLink, useLocation } from 'react-router-dom';
 
 function NavBar(){
     const { user, logout } = useAuth();
+    const location = useLocation();
+
+    const handleLogout = () => {
+        // TODO: add a confirmation dialog here
+        logout();
+        // Redirect to a public page
+        history.push('/home');
+    };
+
+
+
 
     return(
         <Navbar bg="light" expand="lg">
             <Navbar.Brand href="#">Stephan Bank</Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
-                <Nav className="mr-auto">
-                    <Nav.Link href="#/CreateAccount/">Create Account</Nav.Link>
-                    {!user && <Nav.Link href="#/login/">Login</Nav.Link>}
+                <Nav className="me-auto" activeKey={location.pathname}>
+                    <Nav.Link as={NavLink} to="/home" data-tooltip="Home Page">Home</Nav.Link>
+                    <Nav.Link as={NavLink} to="/createaccount" data-tooltip="Create Account Page">Create Account</Nav.Link>
+                    {!user && <Nav.Link as={NavLink} to="/login" data-tooltip="Login Page">Login</Nav.Link>}
                     {user && (
                         <>
-                            <Nav.Link href="#/deposit/">Deposit</Nav.Link>
-                            <Nav.Link href="#/withdraw/">Withdraw</Nav.Link>
-                            <Nav.Link href="#/transfer/">Transfer</Nav.Link>
-                            <Nav.Link href="#/balance/">Balance</Nav.Link>
-                            {user.role === 'admin' && <Nav.Link href="#/alldata/">AllData</Nav.Link>}
+                            <Nav.Link as={NavLink} to="/balance" data-tooltip="Balance Page">Balance</Nav.Link>
+                            <Nav.Link as={NavLink} to="/deposit" data-tooltip="Deposit Page">Deposit</Nav.Link>
+                            <Nav.Link as={NavLink} to="/withdraw" data-tooltip="Withdraw Page">Withdraw</Nav.Link>
+                            <Nav.Link as={NavLink} to="/transfer" data-tooltip="Transfer Page">Transfer</Nav.Link>
+                            {user.role === 'admin' && <Nav.Link as={NavLink} to="/alldata" data-tooltip="All Data Page">All Data</Nav.Link>}
                         </>
                     )}
                 </Nav>
@@ -28,7 +41,9 @@ function NavBar(){
                         <Navbar.Text className="mr-3">
                             Signed in as: <strong>{user.name}</strong>
                         </Navbar.Text>
-                        <Button variant="outline-primary" onClick={logout}>Logout</Button>
+                        <Button variant="outline-primary" onClick={handleLogout}>
+                        Logout
+                    </Button>
                     </Nav>
                 )}
             </Navbar.Collapse>

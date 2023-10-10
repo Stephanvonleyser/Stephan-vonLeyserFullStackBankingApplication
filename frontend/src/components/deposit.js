@@ -11,6 +11,16 @@ function Deposit() {
 
     const validateForm = () => amount > 0 && selectedAccount !== '';
 
+
+    const [timeoutId, setTimeoutId] = useState(null);
+
+    useEffect(() => {
+        // Cleanup: clear timeout if component is unmounted before timeout finishes
+        return () => {
+            if (timeoutId) clearTimeout(timeoutId);
+        };
+    }, [timeoutId]);
+
     const handleSubmit = async (event) => {
         event.preventDefault();
         if (validateForm() && user) {
@@ -21,10 +31,10 @@ function Deposit() {
                 setAmount('');
                 setSelectedAccount('');
             }
-            setTimeout(() => setStatus(''), 3000);
+            setTimeoutId(setTimeout(() => setStatus(''), 3000));
         } else {
             setStatus('Error: Invalid input or unable to find user');
-            setTimeout(() => setStatus(''), 3000);
+            setTimeoutId(setTimeout(() => setStatus(''), 3000));
         }
     };
 
@@ -40,8 +50,8 @@ function Deposit() {
                         <Form.Label>Account</Form.Label>
                         <Form.Control as="select" value={selectedAccount} onChange={e => setSelectedAccount(e.target.value)}>
                             <option value="" disabled>Select account</option>
-                            {user.accounts.map((account, idx) => (
-                                <option key={idx} value={account.accountNumber}>
+                            {user.accounts.map((account) => (
+                                <option key={account.accountNumber} value={account.accountNumber}>
                                     {account.accountNumber}
                                 </option>
                             ))}

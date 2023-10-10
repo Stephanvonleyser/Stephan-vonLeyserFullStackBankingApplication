@@ -10,6 +10,9 @@ function CreateAccount() {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
 
+    const navigate = useNavigate();
+    const mounted = useRef(true);
+
     function validatePassword(password) {
         const lowerCaseRegex = /[a-z]/g;
         const upperCaseRegex = /[A-Z]/g;
@@ -22,8 +25,21 @@ function CreateAccount() {
         );
     }
 
+
+    useEffect(() => {
+        return () => {
+            mounted.current = false;
+        };
+    }, []); // Empty dependency array means this useEffect runs once on mount and once on unmount
+    
+    
+    
+    
+    
+
     async function handleCreate(e) {
         e.preventDefault();
+        
 
         // Validation checks
         if (!name || !email || !password || !confirmPassword) {
@@ -66,25 +82,25 @@ function CreateAccount() {
                 // If the account was created successfully...
                 setStatus('Account created successfully!');
                 setTimeout(() => {
-                    navigate('/login');
+                    if (mounted.current) {
+                        navigate('/login');
+                    }
                 }, 1500);
                 // Additional logic (e.g., redirecting) can be added here.
             } else {
-                // If there was a problem creating the account
                 setStatus(response.data.message || 'An error occurred while creating the account.');
             }
         } catch (error) {
-            // If an error occurred while sending the request...
             setStatus('An error occurred. Please try again later.');
             console.error('An error occurred while sending the request: ', error);
+        } finally {
+            if (mounted.current) {
+                setName('');
+                setEmail('');
+                setPassword('');
+                setConfirmPassword('');
+            }
         }
-
-        // Clear the form
-        setName('');
-        setEmail('');
-        setPassword('');
-        setConfirmPassword('');
-        setStatus('Account created successfully!');
     }
 
     return (

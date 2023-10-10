@@ -13,12 +13,17 @@ function Deposit() {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        if (user) {
+        if (validateForm() && user) {
             const { success, message } = await depositMoney(amount, selectedAccount);
             setStatus(message);
+            if (success) {
+                // Resetting the form on a successful deposit
+                setAmount('');
+                setSelectedAccount('');
+            }
             setTimeout(() => setStatus(''), 3000);
         } else {
-            setStatus('Error: Unable to find user');
+            setStatus('Error: Invalid input or unable to find user');
             setTimeout(() => setStatus(''), 3000);
         }
     };
@@ -57,13 +62,16 @@ function Deposit() {
                         <Form.Control
                             type="number"
                             value={amount}
-                            onChange={(e) => setAmount(e.target.value)}
-                        />
+                            onChange={(e) => setAmount(Math.abs(Number(e.target.value)))} 
+                            placeholder="Amount"
+                            required 
+                    />
                     </Form.Group>
                     <Button block size="lg" type="submit" disabled={!validateForm()}>
                         Deposit
                     </Button>
                 </Form>
+                {status && <Alert variant="info">{status}</Alert>}
             </Card.Body>
         </Card>
     );

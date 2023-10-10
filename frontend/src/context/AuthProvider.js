@@ -54,38 +54,25 @@ export function AuthProvider({ children }) {
         closeSession();
     };
 
-    const depositMoney = async (amount, accountNumber) => {
+    const makeTransaction = async (endpoint, payload) => {
         try {
             const config = getConfig(user.token);  
-            const { data } = await clientAxios.post('/account/deposit', { amount, accountNumber }, config);
+            const { data } = await clientAxios.post(endpoint, payload, config);
             setAuth(data.user);  
-            return { success: true, message: 'Deposit successful!' };
+            return { success: true, message: `${endpoint.split('/')[2]} successful!` };
         } catch (error) {
-            return { success: false, message: error.response.data.message || 'Deposit failed.' };
+            return { success: false, message: error.response.data.message || `${endpoint.split('/')[2]} failed.` };
         }
     };
-
-    const withdrawMoney = async (amount, accountNumber) => {
-        try {
-            const config = getConfig(user.token);  
-            const { data } = await clientAxios.post('/account/withdraw', { amount, accountNumber }, config);
-            setAuth(data.user);  
-            return { success: true, message: 'Withdrawal successful!' };
-        } catch (error) {
-            return { success: false, message: error.response.data.message || 'Withdrawal failed.' };
-        }
-    };
-
-    const transferMoney = async (amount, originAccountNumber, destEmail, destAccountNumber) => {
-        try {
-            const config = getConfig(user.token);  
-            const { data } = await clientAxios.post('/account/transfer', { amount, originAccountNumber, destEmail, destAccountNumber }, config);
-            setAuth(data.user);  
-            return { success: true, message: 'Transfer successful!' };
-        } catch (error) {
-            return { success: false, message: error.response.data.message || 'Transfer failed.' };
-        }
-    };
+    
+    const depositMoney = (amount, accountNumber) => 
+        makeTransaction('/account/deposit', { amount, accountNumber });
+    
+    const withdrawMoney = (amount, accountNumber) => 
+        makeTransaction('/account/withdraw', { amount, accountNumber });
+    
+    const transferMoney = (amount, originAccountNumber, destEmail, destAccountNumber) => 
+        makeTransaction('/account/transfer', { amount, originAccountNumber, destEmail, destAccountNumber });
 
 
 

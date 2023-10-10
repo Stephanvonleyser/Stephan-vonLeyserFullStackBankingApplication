@@ -16,14 +16,14 @@ function App() {
         <Router>
             <NavBar />
             <Switch>
-                <Route path="/Home/" component={Home} />
-                <Route path="/Login" element={Login} />
-                <Route path="/CreateAccount/" component={CreateAccount} />
-                <Route path="/Balance" element={Balance} />
-                <Route path="/Deposit" element={Deposit} />
-                <Route path="/Withdraw" element={Withdraw} />
-                <Route path="/Transfer" element={Transfer} />
-                <Route path="/AllData" element={AllData} />
+                <Route path="/home/" element={Home} />
+                <Route path="/login" element={Login} />
+                <Route path="/createaccount/" element={CreateAccount} />
+                <Route path="/balance" element={Balance} />
+                <Route path="/deposit" element={Deposit} />
+                <Route path="/withdraw" element={Withdraw} />
+                <Route path="/transfer" element={Transfer} />
+                <Route path="/alldata" element={AllData} />
                 
                 {/* Add other routes as needed */}
             </Switch>

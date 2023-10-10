@@ -10,6 +10,7 @@ function Login() {
     const [status, setStatus] = useState('');
     const { setAuth } = useContext(AuthContext); 
     const history = useHistory(); // To navigate to other pages upon successful login
+    
 
     function validateForm() {
         return email.length > 0 && password.length > 0;

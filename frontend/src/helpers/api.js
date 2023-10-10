@@ -1,41 +1,21 @@
 import clientAxios from '../server/clientAxios';
 
-export const getAxios = async (url) => {
+const apiRequest = async (method, url, data = null) => {
     try {
-        const { data } = await clientAxios.get(url);
-        return [data, null];
+        const response = await clientAxios[method](url, data);
+        // Depending on your API response structure, adjust how you extract data.
+        return [response.data, null];
     } catch (error) {
-        console.log(error);
-        return [null, error];
+        console.error('API Error:', error.response ? error.response.data : error.message);
+        // Send a generic error message to avoid exposing API structure or sensitive info.
+        return [null, 'An error occurred while processing your request.'];
     }
 }
 
-export const postAxios = async (url, postData) => {
-    try {
-        const { data } = await clientAxios.post(url, postData);
-        return [data, null];
-    } catch (error) {
-        console.log(error);
-        return [null, error];
-    }
-}
+export const getAxios = (url) => apiRequest('get', url);
 
-export const putAxios = async (url, putData) => {
-    try {
-        const { data } = await clientAxios.put(url, putData);
-        return [data, null];
-    } catch (error) {
-        console.log(error);
-        return [null, error];
-    }
-}
+export const postAxios = (url, postData) => apiRequest('post', url, postData);
 
-export const deleteAxios = async (url) => {
-    try {
-        const { data } = await clientAxios.delete(url);
-        return [data, null];
-    } catch (error) {
-        console.log(error);
-        return [null, error];
-    }
-}
+export const putAxios = (url, putData) => apiRequest('put', url, putData);
+
+export const deleteAxios = (url) => apiRequest('delete', url);

@@ -52,6 +52,10 @@ function Transfer() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    if (!user) {
+        setError('You must be logged in to perform a transfer');
+        return;
+    }
     if (validateForm() && user) {
       setShowModal(true);
       // Initialize countdown
