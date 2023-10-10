@@ -1,9 +1,9 @@
 import React from 'react';
 import { Card, ListGroup } from 'react-bootstrap';
-import { useUser } from '../context/AuthProvider';
+import { useUser } from '../context/AuthProvider';  // Ensure path is correct
 
 function Balance() {
-    const user = useUser();  
+    const user = useUser();  // Retrieving user data from context
 
     if (!user) {
         return <p>Loading...</p>;  
@@ -18,18 +18,16 @@ function Balance() {
                     <strong>Accounts:</strong>
                 </Card.Text>
                 <ListGroup variant="flush">
-                    {user.accounts && user.accounts.length > 0 ? (
-                        user.accounts.map((account, index) => (
-                            <ListGroup.Item key={index}>
-                                <strong>Account:</strong> {account.accountNumber} <br />
-                                <strong>Balance:</strong> ${account.balance.toFixed(2)}
-                            </ListGroup.Item>
-                        ))
-                    ) : (
-                        <p>No accounts available.</p>
-                    )}
+                    {user.accounts.map((account, index) => (
+                        <ListGroup.Item key={index}>
+                            <strong>Account:</strong> {account.accountNumber} <br />
+                            <strong>Balance:</strong> ${account.balance.toFixed(2)}
+                        </ListGroup.Item>
+                    ))}
                 </ListGroup>
             </Card.Body>
         </Card>
     );
 }
+
+export default Balance;

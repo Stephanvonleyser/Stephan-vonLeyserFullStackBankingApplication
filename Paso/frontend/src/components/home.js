@@ -1,6 +1,6 @@
 import React from 'react';
 import { Container } from 'react-bootstrap';
-import bankImage from './public/Bank.jpg'; 
+import bankImage from './public/Bank.jpg'; // Ensure the path is correct
 
 function Home() {
     return (

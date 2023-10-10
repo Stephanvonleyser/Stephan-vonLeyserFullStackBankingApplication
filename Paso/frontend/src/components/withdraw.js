@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
-import { Card, Form, Button, Alert, Image } from 'react-bootstrap';
+import { Card, Form, Button, Alert } from 'react-bootstrap';
 import { useUser, useAuth } from '../context/AuthProvider';
-import atmGif from './public/ATM.gif';  // Ensure the path is correct
 
 function Withdraw() {
     const [amount, setAmount] = useState('');
     const [selectedAccount, setSelectedAccount] = useState('');
     const [status, setStatus] = useState('');
     const [error, setError] = useState('');
-    const [showGif, setShowGif] = useState(false);
     const user = useUser();
     const { withdrawMoney } = useAuth();
 
@@ -28,20 +26,13 @@ function Withdraw() {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        if (validateForm() && user) {
+        if (user) {
             const { success, message } = await withdrawMoney(amount, selectedAccount);
             setStatus(message);
-            if (success) {
-                setAmount('');
-                setSelectedAccount('');
-                setShowGif(true);
-                setTimeout(() => {
-                    setShowGif(false);
-                    setStatus('');
-                }, 2000);
-            } else {
-                setTimeout(() => setStatus(''), 3000);
-            }
+            setTimeout(() => setStatus(''), 3000);
+        } else {
+            setStatus('Error: Unable to find user');
+            setTimeout(() => setStatus(''), 3000);
         }
     };
 
@@ -84,18 +75,13 @@ function Withdraw() {
                     <Form.Control
                         type="number"
                         value={amount}
-                        onChange={(e) => setAmount(Math.abs(Number(e.target.value)))} 
-                        placeholder="Amount"
-                        required 
+                        onChange={(e) => setAmount(e.target.value)}
                     />
                 </Form.Group>
                 <Button block size="lg" type="submit" disabled={!validateForm()}>
                     Withdraw
                 </Button>
             </Form>
-                {status && <Alert variant="info">{status}</Alert>}
-                {error && <Alert variant="danger">{error}</Alert>}
-                {showGif && <Image src={atmGif} alt="ATM gif" />}
             </Card.Body>
         </Card>
     );
