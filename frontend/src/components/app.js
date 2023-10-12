@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import NavBar from './components/navbar';
-import CreateAccount from './components/createaccount';
+import CreateUser from './components/createuser';
 import Home from './components/home';
 import Balance from './components/balance';
 import Deposit from './components/deposit';
@@ -19,7 +19,7 @@ function App() {
             <Switch>
                 <Route path="/home" element={<Home />} />
                 <Route path="/login" element={<Login />} />
-                <Route path="/createaccount" element={<CreateAccount />} />
+                <Route path="/createuser" element={<Createuser />} />
                 <Route path="/balance" element={<Balance />} />
                 <Route path="/deposit" element={<Deposit />} />
                 <Route path="/withdraw" element={<Withdraw />} />

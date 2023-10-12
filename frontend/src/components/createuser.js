@@ -3,7 +3,7 @@ import { Card, Form, Button, Alert, ListGroup } from 'react-bootstrap';
 import clientAxios from '../server/clientAxios';
 import { useNavigate } from 'react-router-dom';
 
-function CreateAccount() {
+function createNewUser() {
     const [status, setStatus] = useState('');
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
@@ -57,22 +57,10 @@ function CreateAccount() {
             return;
         }
 
-        try {
-            const checkEmailResponse = await clientAxios.get(`/check-email?email=${email}`);
-            if (checkEmailResponse.data.exists) {
-                setStatus('Error: Email already in use');
-                setTimeout(() => setStatus(''), 3000);
-                return;
-            }
-        } catch (error) {
-            setStatus('An error occurred while checking the email. Please try again later.');
-            setTimeout(() => setStatus(''), 3000);
-            return;
-        }
-    
+            
         // Send a request to create the account
         try {
-            const response = await clientAxios.post('/createaccount', { 
+            const response = await clientAxios.post('/user', { 
                 name, 
                 email, 
                 password 
