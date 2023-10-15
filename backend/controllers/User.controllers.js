@@ -1,5 +1,4 @@
 import User from '../models/User.model.js'
-import tokenIdGenerate from '../helpers/tokenIdGenerate.js'
 import jwtGenerator from '../helpers/jwtGenerate.js'
 
 
@@ -17,8 +16,6 @@ const createNewUser = async (req, res) => {
 	try {
 		//Crear el objeto y almacenarlo
 		const user = new User(req.body) //req.body es donde está almacenado en obj postman
-		//Generamos el token y añadimos al objeto User que hemos creado
-		user.token = tokenIdGenerate()
 		await user.save()
 
 
@@ -59,50 +56,6 @@ const authUser = async (req, res) => {
 
 }
 
-// Función para confirmar la cuenta con el token 
-const confirmTokenUser = async (req, res) => {
-
-	const { token } = req.params
-
-	//Evaluando el token buscando Users con ese token
-	const haveUserTokenConfirm = await User.findOne({ token })
-	
-	// Si no existe:
-	if(!haveUserTokenConfirm) {
-		const error = new Error('Token is not valid');
-		return res.status(403).json({ msg: error.message })
-	}
-
-	//si existe almacenamos en confirm el true y 
-	//eliminamos el token porque va a ser de un solo uso
-	try {
-		
-		haveUserTokenConfirm.tokenConfirm = true; 
-		haveUserTokenConfirm.token = ''; 
-		await haveUserTokenConfirm.save()
-		res.json({ msg: 'Account confirm!'})
-
-	} catch (error) {
-		error = new Error('No can confirm account');
-		return res.status(403).json({ msg: error.message })
-
-	}
-}
-
-
-const checkTokenUser = async (req, res) => {
-	
-	const { token } = req.params
-
-	const haveUserValidToken = await User.findOne( {token})
-
-	if(haveUserValidToken) {
-		res.json( { msg: 'Confirm account'})
-	} else {
-		const error = new Error('Token is not valid');
-		return res.status(404).json({ msg: error.message })
-	}
-}
 
 const userProfile = async (req, res) => {
 
@@ -115,4 +68,8 @@ const otherProfile = async (req, res) => {
 	res.json(User)
 }
 
-export {createNewUser, authUser, confirmTokenUser,  checkTokenUser,  userProfile, otherProfile}
+const checkAdmin = async (req, res) => {
+	//TODO: Check if user is admin
+}
+
+export {createNewUser, authUser, userProfile, otherProfile, checkAdmin}

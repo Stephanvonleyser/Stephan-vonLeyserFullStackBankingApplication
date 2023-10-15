@@ -11,7 +11,7 @@ app.use(express.json())
 
 const port = process.env.PORT || 4000
 
-//Configurando dorenv
+//Configurando dotenv
 dotenv.config(); // busca un archivo .env
 
 //Conectando nuestra BBDD

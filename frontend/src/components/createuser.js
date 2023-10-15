@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Card, Form, Button, Alert, ListGroup } from 'react-bootstrap';
 import clientAxios from '../server/clientAxios';
 import { useNavigate } from 'react-router-dom';
 
-function createNewUser() {
+
+function CreateUser() {
     const [status, setStatus] = useState('');
-    const [name, setName] = useState('');
+    const [userName, setUserName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -17,11 +18,12 @@ function createNewUser() {
         const lowerCaseRegex = /[a-z]/g;
         const upperCaseRegex = /[A-Z]/g;
         const digitRegex = /[0-9]/g;
+        const symbolRegex = /[!@#$%^&*(),.?":{}|<>]/g;
         return (
             password.length >= 8 &&
             lowerCaseRegex.test(password) &&
             upperCaseRegex.test(password) &&
-            digitRegex.test(password)
+            (digitRegex.test(password) || symbolRegex.test(password))
         );
     }
 
@@ -42,13 +44,13 @@ function createNewUser() {
         
 
         // Validation checks
-        if (!name || !email || !password || !confirmPassword) {
+        if (!userName || !email || !password || !confirmPassword) {
             setStatus('All fields are required.');
             return;
         }
 
         if (!validatePassword(password)) {
-            setStatus('Password does not meet the policy.');
+            setStatus('Password needs to be at least 8 characters long and use UPPERCASE, lowercase and a number 0-9 or symbol .');
             return;
         }
 
@@ -61,7 +63,7 @@ function createNewUser() {
         // Send a request to create the account
         try {
             const response = await clientAxios.post('/user', { 
-                name, 
+                userName, 
                 email, 
                 password 
             });
@@ -83,7 +85,7 @@ function createNewUser() {
             console.error('An error occurred while sending the request: ', error);
         } finally {
             if (mounted.current) {
-                setName('');
+                setUserName('');
                 setEmail('');
                 setPassword('');
                 setConfirmPassword('');
@@ -101,13 +103,13 @@ function createNewUser() {
                     </Alert>
                 )}
                 <Form onSubmit={handleCreate}>
-                    <Form.Group controlId="name">
+                    <Form.Group controlId="userName">
                         <Form.Label>Name</Form.Label>
                         <Form.Control
                             type="text"
                             placeholder="Enter name"
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
+                            value={userName}
+                            onChange={(e) => setUserName(e.target.value)}
                         />
                     </Form.Group>
                     <Form.Group controlId="email">
@@ -156,4 +158,4 @@ function createNewUser() {
     );
 }
 
-export default CreateAccount;
+export default CreateUser;

@@ -19,7 +19,7 @@ function App() {
             <Switch>
                 <Route path="/home" element={<Home />} />
                 <Route path="/login" element={<Login />} />
-                <Route path="/createuser" element={<Createuser />} />
+                <Route path="/createuser" element={<CreateUser />} />
                 <Route path="/balance" element={<Balance />} />
                 <Route path="/deposit" element={<Deposit />} />
                 <Route path="/withdraw" element={<Withdraw />} />
