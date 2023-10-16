@@ -1,7 +1,7 @@
 import mongoose from "mongoose"
 
 
-//Conectar nuestra BBDD
+//Connect to our DB
 export const connectBD = async () => {
     try {
 		const connection = await mongoose.connect(process.env.MONGO_URI, 
@@ -14,6 +14,6 @@ export const connectBD = async () => {
 		}
     catch (error) {
         console.log(`error: ${error.message}`)
-		process.exit(1) // normalmente node acaba los procesos con 0.Forzar proceso termine
+		process.exit(1) // usually node ends proceess with 0.Force process to end.
     }
 }
