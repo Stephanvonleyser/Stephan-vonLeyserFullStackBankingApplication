@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  sbfrontend:
+    image: vonzeo7/svbfrontend:latest  # Using the image from Docker Hub
+    ports:
+      - "3000:3000"
+    environment:
+      - REACT_APP_BACKEND_URL=http://backend:4000/api  # Adjusted to use the service name 'backend'
+
+  backend:
+    image: vonzeo7/svbbackend:latest  # Using the image from Docker Hub
+    ports:
+      - "4000:4000"
+    environment:
+      - DB_URI=mongodb://stbankdb:27017/dbname
+    depends_on:
+      - stbankdb
+
+  stbankdb:
+    image: mongo:latest
+    container_name: stbankdb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+volumes:
+  mongo_data:
