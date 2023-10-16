@@ -107,7 +107,10 @@ export function AuthProvider({ children }) {
     
     const transferMoney = async (amount, originAccountNumber, destEmail, destAccountNumber) => {
         try {
-            const response = await transferAmount({ amount, originAccountNumber, destEmail, destAccountNumber }, user.token);
+            console.log(user.token);
+            const token = localStorage.getItem('token');
+            console.log("Token retrieved:", token);
+            const response = await transferAmount({ amount, originAccountNumber, destEmail, destAccountNumber }, token);
             if (response.data && response.data.user) {
                 setUser(response.data.user);
                 return { success: true, message: 'Transfer successful!' };

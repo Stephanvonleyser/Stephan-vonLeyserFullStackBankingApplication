@@ -13,9 +13,11 @@ function AllData() {
   useEffect(() => {
     const fetchAllUsers = async () => {
         try {
-            const config = getConfig(user.token);
+            const token = localStorage.getItem('token');
+            console.log("Token retrieved:", token);
+            const config = getConfig(token);
             if(user && user.role === 9) {
-                const { data } = await clientAxios.get('/admin/alldata', config);
+                const { data } = await clientAxios.get('/user/admin/alldata', config);
                 setUsers(data.users);
             } else {
                 setError('You do not have access to this data.');

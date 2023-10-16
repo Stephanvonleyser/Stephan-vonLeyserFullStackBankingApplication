@@ -13,34 +13,33 @@ function Transfer() {
   const [error, setError] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [confirmDisabled, setConfirmDisabled] = useState(true);
-  const { user, transferMoney } = useAuth(); 
+  const { user, transferMoney } = useAuth();
   const [countdown, setCountdown] = useState(5);
   const [isLoading, setIsLoading] = useState(false);
+  const [isFormValid, setIsFormValid] = useState(false);
+
+  useEffect(() => {
+    setIsFormValid(validateForm());
+  }, [originAmount, originAccount, destinationEmail, destinationAccount, user]);
 
   const validateForm = () => {
-
     const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
 
     if (originAccount === "") {
-      setError("Please select an origin account");
       return false;
     }
     const accountBalance = user.accounts.find(
       (acc) => acc.accountNumber === originAccount
     ).balance;
     if (originAmount > accountBalance) {
-      setError("Error: can’t transfer more than account balance");
       return false;
     }
     if (!destinationEmail || !destinationAccount) {
-      setError("Destination email and account number are required");
       return false;
     }
     if (!emailRegex.test(destinationEmail)) {
-        setError("Invalid email format");
-        return false;
+      return false;
     }
-    setError("");
     return (
       originAmount > 0 &&
       originAccount !== "" &&
@@ -52,8 +51,8 @@ function Transfer() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (!user) {
-        setError('You must be logged in to perform a transfer');
-        return;
+      setError("You must be logged in to perform a transfer");
+      return;
     }
     if (validateForm() && user) {
       setShowModal(true);
@@ -226,7 +225,7 @@ function Transfer() {
           size="lg"
           type="button"
           onClick={handleSubmit}
-          disabled={!validateForm()}
+          disabled={!isFormValid}
         >
           Transfer
         </Button>
