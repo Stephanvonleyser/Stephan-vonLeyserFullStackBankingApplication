@@ -1,56 +1,67 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import { Card, Form, Button, Alert, Image } from "react-bootstrap";
 import { useAuth } from "../context/AuthProvider";
-
+import styles from "./styles.css";
 
 function Withdraw() {
   const [amount, setAmount] = useState("");
   const [selectedAccount, setSelectedAccount] = useState("");
-  const [status, setStatus] = useState("");
-  const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
+  const [messageType, setMessageType] = useState(""); // "success", "danger", "info"
   const [showImage, setShowImage] = useState(false);
-  const { user, withdrawMoney } = useAuth(); 
+  const { user, withdrawMoney } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
+  const [isFormValid, setIsFormValid] = useState(false);
 
-  const validateForm = () => {
-    if (selectedAccount === "") {
-      setError("Please select an account");
-      return false;
-    }
-    const accountBalance = user.accounts.find(
-      (acc) => acc.accountNumber === selectedAccount
-    ).balance;
-    if (amount > accountBalance) {
-      setError("Error: can’t withdraw more than account balance");
-      return false;
-    }
-    setError("");
-    return amount > 0;
-  };
+  useEffect(() => {
+    const validate = () => {
+      if (selectedAccount === "") {
+        setMessage("Please select an account");
+        setMessageType("danger");
+        return false;
+      }
+      const accountBalance = user.accounts.find(
+        (acc) => acc.accountNumber === selectedAccount
+      ).balance;
+      if (amount > accountBalance) {
+        setMessage("Error: can’t withdraw more than account balance");
+        setMessageType("danger");
+        return false;
+      }
+      setMessage("");
+      return amount > 0;
+    };
+
+    console.log("Amount:", amount, "Selected account:", selectedAccount);
+    console.log("validate:");
+    setIsFormValid(validate());
+  }, [amount, selectedAccount, user]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    if (validateForm() && user) {
+    if (isFormValid && user) {
       setIsLoading(true);
       const { success, message } = await withdrawMoney(amount, selectedAccount);
       setIsLoading(false);
-      setStatus(message);
+      setMessage(message);
       if (success) {
+        setMessageType("success");
         setAmount("");
         setSelectedAccount("");
         setShowImage(true);
         setTimeout(() => {
           setShowImage(false);
-          setStatus("");
+          setMessage("");
         }, 3000);
       } else {
-        setTimeout(() => setStatus(""), 3000);
+        setMessageType("info");
+        setTimeout(() => setMessage(""), 3000);
       }
     }
   };
 
   return (
-    <Card bg="danger" text="white" style={{ width: "18rem" }} className="mb-2">
+    <Card bg="danger" text="white" style={{ width: "18rem", position: 'relative' }} className="mb-2">
       <Card.Header>Withdraw</Card.Header>
       <Card.Body>
         {user ? (
@@ -85,15 +96,10 @@ function Withdraw() {
         ) : (
           <p>Please login</p>
         )}
-        {status && (
-          <Alert variant="success" onClose={() => setStatus("")} dismissible>
-            <p>{status}</p>
-          </Alert>
-        )}
-        {error && (
-          <Alert variant="danger" onClose={() => setError("")} dismissible>
-            <p>{error}</p>
-          </Alert>
+        {message && (
+        <Alert variant={messageType} onClose={() => setMessage("")} dismissible>
+          <p>{message}</p>
+        </Alert>
         )}
         <Form onSubmit={handleSubmit}>
           <Form.Group size="lg" controlId="amount">
@@ -110,10 +116,10 @@ function Withdraw() {
             block
             size="lg"
             type="submit"
-            disabled={!validateForm() || isLoading || showImage}
+            disabled={!isFormValid || isLoading || showImage}
             style={{
               cursor:
-                !validateForm() || isLoading || showImage
+                !isFormValid || isLoading || showImage
                   ? "not-allowed"
                   : "pointer",
             }}
@@ -121,9 +127,11 @@ function Withdraw() {
             {isLoading ? "Processing..." : "Withdraw"}
           </Button>
         </Form>
-        {status && <Alert variant="info">{status}</Alert>}
-        {error && <Alert variant="danger">{error}</Alert>}
-        {showImage && <Image src="/ATM-withdraw.png" alt="ATM image" />}
+        {showImage && (
+          <div className="withdraw-image-overlay">
+            <Image src="/ATM-withdraw.png" alt="ATM image" />
+          </div>
+        )}
       </Card.Body>
     </Card>
   );

@@ -91,7 +91,10 @@ export function AuthProvider({ children }) {
     
     const withdrawMoney = async (amount, accountNumber) => {
         try {
-            const response = await withdrawAmount({ amount, accountNumber }, user.token);
+            console.log(user.token);
+            const token = localStorage.getItem('token');
+            console.log("Token retrieved:", token);
+            const response = await withdrawAmount({ amount, accountNumber }, token);
             if (response.data && response.data.user) {
                 setUser(response.data.user);
                 return { success: true, message: 'Withdrawal successful!' };

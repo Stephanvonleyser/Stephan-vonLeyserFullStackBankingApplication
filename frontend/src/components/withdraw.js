@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, Form, Button, Alert, Image } from "react-bootstrap";
 import { useUser, useAuth } from "../context/AuthProvider";
 import atmPng from "./public/ATM-withdraw.png"; // Ensure the path is correct
@@ -12,26 +12,34 @@ function Withdraw() {
   const user = useUser();
   const { withdrawMoney } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
+  const [isFormValid, setIsFormValid] = useState(false);
 
-  const validateForm = () => {
-    if (selectedAccount === "") {
-      setError("Please select an account");
-      return false;
-    }
-    const accountBalance = user.accounts.find(
-      (acc) => acc.accountNumber === selectedAccount
-    ).balance;
-    if (amount > accountBalance) {
-      setError("Error: can’t withdraw more than account balance");
-      return false;
-    }
-    setError("");
-    return amount > 0;
-  };
+  useEffect(() => {
+    const validate = () => {
+      if (selectedAccount === "") {
+        setError("Please select an account");
+        return false;
+      }
+      const accountBalance = user.accounts.find(
+        (acc) => acc.accountNumber === selectedAccount
+      ).balance;
+      if (amount > accountBalance) {
+        setError("Error: can’t withdraw more than account balance");
+        return false;
+      }
+      setError("");
+      return amount > 0;
+    };
+
+    console.log("Amount:", amount, "Selected account:", selectedAccount);
+    console.log("validate:" , );
+    setIsFormValid(validate());
+  }, [amount, selectedAccount, user]);
+
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    if (validateForm() && user) {
+    if (isFormValid && user) {
       setIsLoading(true);
       const { success, message } = await withdrawMoney(amount, selectedAccount);
       setIsLoading(false);
@@ -111,10 +119,10 @@ function Withdraw() {
             block
             size="lg"
             type="submit"
-            disabled={!validateForm() || isLoading || showImage}
+            disabled={!isFormValid || isLoading || showImage}
             style={{
               cursor:
-                !validateForm() || isLoading || showImage
+                !isFormValid || isLoading || showImage
                   ? "not-allowed"
                   : "pointer",
             }}

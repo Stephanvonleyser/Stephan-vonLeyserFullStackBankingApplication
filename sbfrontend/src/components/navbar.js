@@ -3,7 +3,7 @@ import { useAuth } from "../context/AuthProvider";
 import { Navbar, Nav, Button } from "react-bootstrap";
 import { NavLink, useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import styles from "./navbarr.css"
+import styles from "./styles.css"
 
 function NavBar() {
   const { user, logout } = useAuth();

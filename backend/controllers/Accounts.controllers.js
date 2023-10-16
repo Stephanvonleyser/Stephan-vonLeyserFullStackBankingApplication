@@ -12,7 +12,7 @@ const deposit = async (req, res) => {
             return res.status(404).json({ msg: "Account not found" });
         }
 
-        const account = user.accounts.id(accountNumber);
+        const account = user.accounts.find(acc => acc.accountNumber === accountNumber);
         if (!account) {
             return res.status(404).json({ msg: "Specific account number not found" });
         }
@@ -38,7 +38,7 @@ const withdraw = async (req, res) => {
             return res.status(404).json({ msg: "Account not found" });
         }
 
-        const account = user.accounts.id(accountNumber);
+        const account = user.accounts.find(acc => acc.accountNumber === accountNumber);
         if (!account) {
             return res.status(404).json({ msg: "Specific account number not found" });
         }
@@ -66,8 +66,8 @@ const transfer = async (req, res) => {
             return res.status(404).json({ msg: "Account not found" });
         }
 
-        const originAccount = originUser.accounts.id(originAccountNumber);
-        const destAccount = destUser.accounts.id(destAccountNumber);
+        const originAccount = originUser.accounts.find(acc => acc.accountNumber === originAccountNumber);
+        const destAccount = destUser.accounts.find(acc => acc.accountNumber === destAccountNumber);
 
         if (originAccount.balance < parseFloat(amount)) {
             return res.status(400).json({ msg: "Insufficient funds" });
