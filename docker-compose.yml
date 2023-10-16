@@ -17,7 +17,7 @@ services:
     ports:
       - "4000:4000"
     environment:
-      - MONGO_URI=mongodb://stbankdb:27017/dbname
+      - DB_URI=mongodb://stbankdb:27017/dbname  # Changed MONGO_URI to DB_URI for consistency
     depends_on:
       - stbankdb
 
