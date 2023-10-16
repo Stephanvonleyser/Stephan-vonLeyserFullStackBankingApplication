@@ -7,5 +7,5 @@ backend/.env
 .env
 
 mykeydroplet.txt
-mykeydroplet.pub
+mykeydroplet.txt.pub
 ```
