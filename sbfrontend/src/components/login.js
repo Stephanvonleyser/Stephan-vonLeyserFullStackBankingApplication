@@ -1,14 +1,14 @@
 import React, { useState, useContext } from 'react';
 import { Card, Form, Button, Alert } from 'react-bootstrap';
 import clientAxios from '../server/clientAxios';  
-import { AuthContext } from '../context/AuthProvider'; 
+import { useAuth } from '../context/AuthProvider'; 
 import { useNavigate } from 'react-router-dom';
 
 function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [status, setStatus] = useState('');
-    const { login } = useContext(AuthContext); 
+    const { login } = useAuth();
     const navigate = useNavigate(); // To navigate to other pages upon successful login
     
 
