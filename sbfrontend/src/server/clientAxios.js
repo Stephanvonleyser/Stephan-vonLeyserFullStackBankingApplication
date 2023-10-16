@@ -1,8 +1,10 @@
-import axios from 'axios'
+import axios from 'axios';
+
+// If REACT_APP_BACKEND_URL is defined, use it. Otherwise, default to 'http://localhost:4000/api'.
+const baseURL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:4000/api';
 
 const clientAxios = axios.create({
-   // baseURL: process.env.REACT_APP_MONGO_BACKEND_URL + '/api'
-   baseURL: 'http://localhost:4000/api'
-})
+    baseURL: baseURL
+});
 
 export default clientAxios;
