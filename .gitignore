@@ -5,3 +5,7 @@ frontend/.env
 backend/node_modules/
 backend/.env
 .env
+
+mykeydroplet.txt
+mykeydroplet.pub
+```
