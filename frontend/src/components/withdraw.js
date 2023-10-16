@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import { Card, Form, Button, Alert, Image } from "react-bootstrap";
 import { useUser, useAuth } from "../context/AuthProvider";
-import atmGif from "./public/ATM.gif"; // Ensure the path is correct
+import atmPng from "./public/ATM-withdraw.png"; // Ensure the path is correct
 
 function Withdraw() {
   const [amount, setAmount] = useState("");
   const [selectedAccount, setSelectedAccount] = useState("");
   const [status, setStatus] = useState("");
   const [error, setError] = useState("");
-  const [showGif, setShowGif] = useState(false);
+  const [showImage, setShowImage] = useState(false);
   const user = useUser();
   const { withdrawMoney } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
@@ -39,9 +39,9 @@ function Withdraw() {
       if (success) {
         setAmount("");
         setSelectedAccount("");
-        setShowGif(true);
+        setShowImage(true);
         setTimeout(() => {
-          setShowGif(false);
+          setShowImage(false);
           setStatus("");
         }, 3000);
       } else {
@@ -111,10 +111,10 @@ function Withdraw() {
             block
             size="lg"
             type="submit"
-            disabled={!validateForm() || isLoading || showGif}
+            disabled={!validateForm() || isLoading || showImage}
             style={{
               cursor:
-                !validateForm() || isLoading || showGif
+                !validateForm() || isLoading || showImage
                   ? "not-allowed"
                   : "pointer",
             }}
@@ -124,7 +124,7 @@ function Withdraw() {
         </Form>
         {status && <Alert variant="info">{status}</Alert>}
         {error && <Alert variant="danger">{error}</Alert>}
-        {showGif && <Image src={atmGif} alt="ATM gif" />}
+        {showImage && <Image src={atmPng} alt="ATM image" />}
       </Card.Body>
     </Card>
   );

@@ -1,6 +1,10 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getUserProfile } from '../server/api/user/get';  // Make sure the path is correct
+import clientAxios from '../server/clientAxios';
+import { getConfig } from '../server/config';
+import { sendLogin } from '../server/api/user/post';
+
 
 export const AuthContext = createContext();
 export const UserContext = createContext();
@@ -71,7 +75,7 @@ export function AuthProvider({ children }) {
 
     const makeTransaction = async (endpoint, payload) => {
         try {
-            const config = getConfig(user.token);  
+            const config = getConfig(auth.token);  
             const { data } = await clientAxios.post(endpoint, payload, config);
             setAuth(data.user);  
             return { success: true, message: `${endpoint.split('/')[2]} successful!` };
