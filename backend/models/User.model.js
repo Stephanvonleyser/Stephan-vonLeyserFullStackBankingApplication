@@ -1,6 +1,23 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 
+
+
+//Account schema
+const AccountSchema = new mongoose.Schema({
+    accountNumber: { 
+        type: String, 
+        required: true, 
+        unique: true 
+    },
+    balance: { 
+        type: Number, 
+        required: true, 
+        default: 100 
+    }
+});
+
+
 //User Schema
 const userSchema = mongoose.Schema(
     {
@@ -39,19 +56,7 @@ const userSchema = mongoose.Schema(
     }
 );
 
-//Account schema
-const AccountSchema = new mongoose.Schema({
-    accountNumber: { 
-        type: String, 
-        required: true, 
-        unique: true 
-    },
-    balance: { 
-        type: Number, 
-        required: true, 
-        default: 0 
-    }
-});
+
 
 
 //Esto hace que se ejecute antes de guardar el registro en la BBDD

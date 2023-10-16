@@ -33,11 +33,7 @@ function CreateUser() {
             mounted.current = false;
         };
     }, []); // Empty dependency array means this useEffect runs once on mount and once on unmount
-    
-    
-    
-    
-    
+        
 
     async function handleCreate(e) {
         e.preventDefault();

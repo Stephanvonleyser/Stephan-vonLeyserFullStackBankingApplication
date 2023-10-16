@@ -46,8 +46,23 @@ export function AuthProvider({ children }) {
         localStorage.clear();
     };
 
-    const login = (user) => {
-        // Logic for setting user and token in localStorage
+    const login = async (email, password) => {
+        try {
+            const response = await sendLogin({ email, password });
+            if (response.data && response.data.token) {
+                localStorage.setItem('token', response.data.token);
+                setAuth({
+                    token: response.data.token,
+                    user: response.data.user
+                });
+                navigate('/home');
+                return { success: true };
+            } else {
+                return { success: false, message: 'Invalid email or password' };
+            }
+        } catch (error) {
+            return { success: false, message: error.response ? error.response.data.message : 'An error occurred. Please try again later.' };
+        }
     };
 
     const logout = () => {

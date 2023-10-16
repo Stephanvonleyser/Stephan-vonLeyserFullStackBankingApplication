@@ -8,7 +8,7 @@ function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [status, setStatus] = useState('');
-    const { setAuth } = useContext(AuthContext); 
+    const { login } = useContext(AuthContext); 
     const history = useHistory(); // To navigate to other pages upon successful login
     
 
@@ -20,7 +20,7 @@ function Login() {
         event.preventDefault();
         
         try {
-            const response = await clientAxios.post('/login', { email, password });
+            const response = await login(email, password);
             if (response.data.success) {
                 // Save the token and user data in the context
                 setAuth({
@@ -40,7 +40,7 @@ function Login() {
                     history.push('/balance');
                 }, 3000);
             } else {
-                setStatus('Invalid email or password');
+                setStatus(response.message);
             }
         } catch (error) {
             setStatus('An error occurred. Please try again later.');

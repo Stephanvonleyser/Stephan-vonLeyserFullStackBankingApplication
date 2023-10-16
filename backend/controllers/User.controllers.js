@@ -1,5 +1,6 @@
 import User from '../models/User.model.js'
 import jwtGenerator from '../helpers/jwtGenerate.js'
+import accountGenerate from '../helpers/accountGenerate.js';
 
 
 
@@ -15,7 +16,15 @@ const createNewUser = async (req, res) => {
 
 	try {
 		//Crear el objeto y almacenarlo
-		const user = new User(req.body) //req.body es donde está almacenado en obj postman
+		//Generar nro de cuante unico para el usuario
+		const accountNumber = accountGenerate();
+		const user = new User({
+            ...req.body, //req.body es donde está almacenado en obj postman
+            accounts: [{
+                accountNumber: accountNumber,
+                balance: 100 // Initial balance of 100
+            }]
+        }); 
 		await user.save()
 
 
@@ -35,23 +44,31 @@ const authUser = async (req, res) => {
 	const user = await User.findOne({ email })
 
 	if(!user) {
-		const error = new Error('User does not exist. Please, sign up.');
-		return res.status(400).json({ msg: error.message })
+		res.status(400).json({
+			success: false,
+			message: "User does not exist. Please, sign up."
+		});
 	}
 
 
 	//Comprobar su password
 	if( await user.checkPassword(password)) {
-		res.json( {
-			_id: user._id,
-			userName: user.userName,
-			email: user.email,
+		res.json({
+			success: true,
+			user: {
+				_id: user._id,
+				userName: user.userName,
+				email: user.email,
+				accounts: user.accounts
+			},
 			token: jwtGenerator(user._id)
-		})
+		});
 
 	} else {
-		const error = new Error('Incorrect Passowrd');
-		return res.status(403).json({ msg: error.message })
+		res.status(403).json({
+			success: false,
+			message: "Incorrect Password"
+		});
 	}
 
 }
