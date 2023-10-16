@@ -59,6 +59,7 @@ const authUser = async (req, res) => {
 				_id: user._id,
 				userName: user.userName,
 				email: user.email,
+				role: user.role,
 				accounts: user.accounts
 			},
 			token: jwtGenerator(user._id)
@@ -85,8 +86,30 @@ const otherProfile = async (req, res) => {
 	res.json(User)
 }
 
-const checkAdmin = async (req, res) => {
-	//TODO: Check if user is admin
-}
+const checkAdmin = async (req, res, next) => {
+    try {
+        const user = await User.findById(req.user.id);
+
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'User not found' });
+        }
+
+        if (user.role !== 9) {
+            return res.status(403).json({ success: false, message: 'User is not an admin' });
+        }
+
+        // If the user is an admin, proceed to the next middleware or route handler
+        next();
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Server error');
+    }
+};
+
+
+
+
+
 
 export {createNewUser, authUser, userProfile, otherProfile, checkAdmin}

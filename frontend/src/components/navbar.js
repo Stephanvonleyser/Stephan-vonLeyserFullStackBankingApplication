@@ -2,16 +2,22 @@ import React from 'react';
 import { useAuth } from '../context/AuthProvider';
 import { Navbar, Nav, Button } from 'react-bootstrap'; 
 import { NavLink, useLocation } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
+
 
 function NavBar(){
     const { user, logout } = useAuth();
     const location = useLocation();
+    const history = useHistory();
 
     const handleLogout = () => {
-        // TODO: add a confirmation dialog here
-        logout();
-        // Redirect to a public page
-        history.push('/home');
+        const userConfirmed = window.confirm("Are you sure you want to logout?");
+
+        if (userConfirmed) {
+            logout();
+            // Redirect to a public page
+            history.push('/home');
+        }
     };
 
 
@@ -32,7 +38,7 @@ function NavBar(){
                             <Nav.Link as={NavLink} to="/deposit" data-tooltip="Deposit Page">Deposit</Nav.Link>
                             <Nav.Link as={NavLink} to="/withdraw" data-tooltip="Withdraw Page">Withdraw</Nav.Link>
                             <Nav.Link as={NavLink} to="/transfer" data-tooltip="Transfer Page">Transfer</Nav.Link>
-                            {user.role === 'admin' && <Nav.Link as={NavLink} to="/alldata" data-tooltip="All Data Page">All Data</Nav.Link>}
+                            {user.role === 9 && <Nav.Link as={NavLink} to="/alldata" data-tooltip="All Data Page">All Data</Nav.Link>}
                         </>
                     )}
                 </Nav>

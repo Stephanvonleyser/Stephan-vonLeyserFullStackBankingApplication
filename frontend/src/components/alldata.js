@@ -1,17 +1,18 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useAuth } from "../context/AuthProvider";
-import { Card as BootstrapCard, Alert } from "react-bootstrap";
+import { Card as BootstrapCard, Alert, ListGroup } from "react-bootstrap";
 import clientAxios, { config } from "../server/clientAxios";
 
 function AllData() {
   const [users, setUsers] = useState([]);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
   const { user } = useAuth();
 
   useEffect(() => {
     const fetchAllUsers = async () => {
         try {
-            if(user && user.role === 'admin') {
+            if(user && user.role === 9) {
                 const { data } = await clientAxios.get('/admin/alldata', config);
                 setUsers(data.users);
             } else {
@@ -19,10 +20,14 @@ function AllData() {
             }
         } catch (error) {
             setError('Error fetching data: ' + (error.response?.data?.message || error.message));
+        } finally {
+            setLoading(false);
         }
     };
     fetchAllUsers();
-}, [user]);
+  }, [user]);
+
+  if (loading) return <p>Loading...</p>;
 
   return (
     <>
@@ -40,16 +45,16 @@ function AllData() {
             <BootstrapCard.Text>Name: {user.name}</BootstrapCard.Text>
             <BootstrapCard.Text>Email: {user.email}</BootstrapCard.Text>
             <ListGroup variant="flush">
-                    {user.accounts && user.accounts.length > 0 ? (
-                        user.accounts.map((account) => (
-                            <ListGroup.Item key={account.accountNumber}>
-                                <strong>Account:</strong> {account.accountNumber} <br />
-                                <strong>Balance:</strong> ${account.balance.toFixed(2)}
-                            </ListGroup.Item>
-                        ))
-                    ) : (
-                        <p>No accounts available.</p>
-                    )}
+              {user.accounts && user.accounts.length > 0 ? (
+                user.accounts.map((account) => (
+                  <ListGroup.Item key={account.accountNumber}>
+                    <strong>Account:</strong> {account.accountNumber} <br />
+                    <strong>Balance:</strong> ${account.balance.toFixed(2)}
+                  </ListGroup.Item>
+                ))
+              ) : (
+                <p>No accounts available.</p>
+              )}
             </ListGroup>
           </BootstrapCard.Body>
         </BootstrapCard>
