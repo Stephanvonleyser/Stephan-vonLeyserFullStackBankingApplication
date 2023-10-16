@@ -2,6 +2,9 @@ import User from '../models/User.model.js'
 
 const deposit = async (req, res) => {
     const { amount, accountNumber } = req.body;
+    console.log("Passing deposit:");
+    console.log("Amount:", amount);
+    console.log("Account Number:", accountNumber);
 
     try {
         let user = await User.findOne({ "accounts.accountNumber": accountNumber });
@@ -10,6 +13,9 @@ const deposit = async (req, res) => {
         }
 
         const account = user.accounts.id(accountNumber);
+        if (!account) {
+            return res.status(404).json({ msg: "Specific account number not found" });
+        }
         account.balance += parseFloat(amount);
 
         await user.save();
@@ -22,6 +28,9 @@ const deposit = async (req, res) => {
 
 const withdraw = async (req, res) => {
     const { amount, accountNumber } = req.body;
+    console.log("Passing withdraw:");
+    console.log("Amount:", amount);
+    console.log("Account Number:", accountNumber);
 
     try {
         let user = await User.findOne({ "accounts.accountNumber": accountNumber });
@@ -30,6 +39,9 @@ const withdraw = async (req, res) => {
         }
 
         const account = user.accounts.id(accountNumber);
+        if (!account) {
+            return res.status(404).json({ msg: "Specific account number not found" });
+        }
         if (account.balance < parseFloat(amount)) {
             return res.status(400).json({ msg: "Insufficient funds" });
         }

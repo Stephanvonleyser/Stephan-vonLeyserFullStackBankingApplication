@@ -3,19 +3,20 @@ import { useNavigate } from 'react-router-dom';
 import { getUserProfile } from '../server/api/user/get';  // Make sure the path is correct
 import clientAxios from '../server/clientAxios';
 import { getConfig } from '../server/config';
-import { sendLogin } from '../server/api/user/post';
+import { sendLogin, depositAmount, withdrawAmount, transferAmount } from '../server/api/user/post';
 
 
 export const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
-    const [user, setUser] = useState({});
+    const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
     useEffect(() => {
         const authUser = async () => {
             const token = localStorage.getItem('token');
+            console.log("Token retrieved:", token);
 
             if (!token) {
                 setLoading(false);
@@ -34,17 +35,17 @@ export function AuthProvider({ children }) {
                 setUser(data);
                 navigate('/home');
             } catch (error) {
-                setUser({});
+                setUser(null);
             }
 
             setLoading(false);
         };
 
         authUser();
-    }, [navigate]);
+    }, []);
 
     const closeSession = () => {
-        setUser({});
+        setUser(null);
         navigate('/');
         localStorage.clear();
     };
@@ -54,6 +55,7 @@ export function AuthProvider({ children }) {
             const response = await sendLogin({ email, password });
             if (response.data && response.data.token) {
                 localStorage.setItem('token', response.data.token);
+                console.log('Response from server:', response.data);
                 setUser(response.data.user);
                 navigate('/home');
                 return { success: true };
@@ -69,27 +71,49 @@ export function AuthProvider({ children }) {
         closeSession();
     };
 
-    const makeTransaction = async (endpoint, payload) => {
+
+    
+    const depositMoney = async (amount, accountNumber) => {
         try {
-            const config = getConfig(user.token);  
-            const { data } = await clientAxios.post(endpoint, payload, config);
-            setUser(data.user);  
-            return { success: true, message: `${endpoint.split('/')[2]} successful!` };
+            console.log(user.token);
+            const token = localStorage.getItem('token');
+            console.log("Token retrieved:", token);
+            const response = await depositAmount({ amount, accountNumber }, token);
+            if (response.data && response.data.user) {
+                setUser(response.data.user);
+                return { success: true, message: 'Deposit successful!' };
+            }
+            return { success: false, message: response.error || 'Deposit failed.' };
         } catch (error) {
-            return { success: false, message: error.response.data.message || `${endpoint.split('/')[2]} failed.` };
+            return { success: false, message: 'An error occurred during deposit.' };
         }
     };
     
-    const depositMoney = (amount, accountNumber) => 
-        makeTransaction('/account/deposit', { amount, accountNumber });
+    const withdrawMoney = async (amount, accountNumber) => {
+        try {
+            const response = await withdrawAmount({ amount, accountNumber }, user.token);
+            if (response.data && response.data.user) {
+                setUser(response.data.user);
+                return { success: true, message: 'Withdrawal successful!' };
+            }
+            return { success: false, message: response.error || 'Withdrawal failed.' };
+        } catch (error) {
+            return { success: false, message: 'An error occurred during withdrawal.' };
+        }
+    };
     
-    const withdrawMoney = (amount, accountNumber) => 
-        makeTransaction('/account/withdraw', { amount, accountNumber });
-    
-    const transferMoney = (amount, originAccountNumber, destEmail, destAccountNumber) => 
-        makeTransaction('/account/transfer', { amount, originAccountNumber, destEmail, destAccountNumber });
-
-
+    const transferMoney = async (amount, originAccountNumber, destEmail, destAccountNumber) => {
+        try {
+            const response = await transferAmount({ amount, originAccountNumber, destEmail, destAccountNumber }, user.token);
+            if (response.data && response.data.user) {
+                setUser(response.data.user);
+                return { success: true, message: 'Transfer successful!' };
+            }
+            return { success: false, message: response.error || 'Transfer failed.' };
+        } catch (error) {
+            return { success: false, message: 'An error occurred during transfer.' };
+        }
+    };
 
 
     const authContextValue = {

@@ -3,7 +3,7 @@ import { Card, ListGroup } from 'react-bootstrap';
 import { useAuth } from '../context/AuthProvider';
 
 function Balance() {
-    const user = useAuth();  
+    const { user } = useAuth();  
 
     const [error, setError] = React.useState(null);
 

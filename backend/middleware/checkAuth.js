@@ -4,6 +4,9 @@ import User from '../models/User.model.js';
 const checkAuth = async (req, res, next) => {
     let token = '';
 
+    console.log('Passing CheckAuth:');
+    console.log('Headers:', req.headers);
+    console.log('Authorization Header:', req.headers.authorization);
     // Check if token is provided
     if (
         req.headers.authorization && 

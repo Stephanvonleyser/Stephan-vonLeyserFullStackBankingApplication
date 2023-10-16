@@ -37,7 +37,7 @@ function Login() {
                 // Redirect to the balance page after 3 seconds
                 setTimeout(() => {
                     setStatus('');
-                    navigate.push('/balance');
+                    navigate('/balance');
                 }, 3000);
             } else {
                 setStatus(response.message);

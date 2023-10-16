@@ -52,7 +52,9 @@ export function AuthProvider({ children }) {
 
     const login = async (email, password) => {
         try {
+            console.log(`Logging in with email: ${email} and password: ${password}`);
             const response = await sendLogin({ email, password });
+            console.log('Response from server:', response.data);
             if (response.data && response.data.token) {
                 localStorage.setItem('token', response.data.token);
                 setAuth({
@@ -65,6 +67,7 @@ export function AuthProvider({ children }) {
                 return { success: false, message: 'Invalid email or password' };
             }
         } catch (error) {
+            console.error('Error during login:', error)
             return { success: false, message: error.response ? error.response.data.message : 'An error occurred. Please try again later.' };
         }
     };
