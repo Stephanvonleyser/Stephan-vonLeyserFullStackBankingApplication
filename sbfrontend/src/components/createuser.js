@@ -15,16 +15,23 @@ function CreateUser() {
   const mounted = useRef(true);
 
   function validatePassword(password) {
-    const lowerCaseRegex = /[a-z]/g;
-    const upperCaseRegex = /[A-Z]/g;
-    const digitRegex = /[0-9]/g;
-    const symbolRegex = /[!@#$%^&*(),.?":{}|<>]/g;
-    return (
-      password.length >= 8 &&
-      lowerCaseRegex.test(password) &&
-      upperCaseRegex.test(password) &&
-      (digitRegex.test(password) || symbolRegex.test(password))
-    );
+    const hasLowerCase = /[a-z]/g.test(password);
+    const hasUpperCase = /[A-Z]/g.test(password);
+    const hasDigit = /[0-9]/g.test(password);
+    const hasSymbol = /[!@#$%^&*(),.?":{}|<>]/g.test(password);
+    const isLengthValid = password.length >= 8;
+
+    return {
+      isLengthValid,
+      hasLowerCase,
+      hasUpperCase,
+      hasDigitOrSymbol: hasDigit || hasSymbol,
+      isValid:
+        isLengthValid &&
+        hasLowerCase &&
+        hasUpperCase &&
+        (hasDigit || hasSymbol),
+    };
   }
 
   useEffect(() => {
@@ -90,6 +97,8 @@ function CreateUser() {
       }
     }
   }
+
+  const passwordValidation = validatePassword(password);
 
   return (
     <Card bg="primary" text="white" style={{ width: "18rem" }} className="mb-2">
@@ -161,9 +170,26 @@ function CreateUser() {
           </Form.Group>
           <ListGroup variant="flush">
             <ListGroup.Item
-              variant={validatePassword(password) ? "success" : "danger"}
+              variant={passwordValidation.isLengthValid ? "success" : "danger"}
             >
-              Password meets policy
+              Password is at least 8 characters
+            </ListGroup.Item>
+            <ListGroup.Item
+              variant={passwordValidation.hasLowerCase ? "success" : "danger"}
+            >
+              Contains lowercase letter
+            </ListGroup.Item>
+            <ListGroup.Item
+              variant={passwordValidation.hasUpperCase ? "success" : "danger"}
+            >
+              Contains UPPERCASE letter
+            </ListGroup.Item>
+            <ListGroup.Item
+              variant={
+                passwordValidation.hasDigitOrSymbol ? "success" : "danger"
+              }
+            >
+              Contains a number (0-9) or symbol
             </ListGroup.Item>
             <ListGroup.Item
               variant={password === confirmPassword ? "success" : "danger"}
