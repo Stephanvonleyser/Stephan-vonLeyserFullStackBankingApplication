@@ -48,6 +48,7 @@ function AllData() {
           <BootstrapCard.Body>
             <BootstrapCard.Text>Name: {user.name}</BootstrapCard.Text>
             <BootstrapCard.Text>Email: {user.email}</BootstrapCard.Text>
+            <BootstrapCard.Text>Role: {user.role}</BootstrapCard.Text>
             <ListGroup variant="flush">
               {user.accounts && user.accounts.length > 0 ? (
                 user.accounts.map((account) => (
