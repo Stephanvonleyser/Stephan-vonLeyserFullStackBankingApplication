@@ -10,14 +10,17 @@ import Withdraw from './components/withdraw';
 import Transfer from './components/transfer';
 import AllData from './components/alldata';
 import Login from './components/login';
+import { AuthProvider } from './context/AuthProvider';
 // Import other components as needed...
 
 function App() {
     return (
-        <Router>
+        <Router> 
+          <AuthProvider>
             <NavBar />
             <Container>
             <Routes>
+                <Route exact path="/" element={<Home />} />
                 <Route path="/home" element={<Home />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/createuser" element={<CreateUser />} />
@@ -28,6 +31,7 @@ function App() {
                 <Route path="/alldata" element={<AllData />} />
             </Routes>
             </Container>
+            </AuthProvider>
         </Router>
     );
 }

@@ -58,7 +58,7 @@ function CreateUser() {
             
         // Send a request to create the account
         try {
-            const response = await clientAxios.post('/user', { 
+            const response = await clientAxios.post('/user/createuser', { 
                 userName, 
                 email, 
                 password 

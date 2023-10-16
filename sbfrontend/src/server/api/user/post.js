@@ -2,7 +2,7 @@ import clientAxios from '../../clientAxios'
 
 export const sendNewUser = async data => {
     try {
-        const response = await clientAxios.post(`/user`, data);
+        const response = await clientAxios.post(`/createuser`, data);
         return { data: response.data, error: null };
     } catch (error) {
         return { data: null, error: error.response?.data?.message || "An error occurred" };
@@ -11,23 +11,12 @@ export const sendNewUser = async data => {
 
 export const sendLogin= async (data) => {
     try {
-        const response = await clientAxios.post(`/user/login`, data);
+        const response = await clientAxios.post(`/login`, data);
         return { data: response.data, error: null };
     } catch (error) {
         return { data: null, error: error.response?.data?.message || "An error occurred" };
     }
 };
-
-
-export const getUserProfile = async config => {
-    try {
-        const response = await clientAxios.get(`/user/profile`, config);
-        return { data: response.data, error: null };
-    } catch (error) {
-        return { data: null, error: error.response?.data?.message || "An error occurred" };
-    }
-};
-
 
 export const depositAmount = async (data, token) => {
     try {

@@ -8,7 +8,7 @@ function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [status, setStatus] = useState('');
-    const { login } = useAuth();
+    const { login, setUser } = useAuth();
     const navigate = useNavigate(); // To navigate to other pages upon successful login
     
 
@@ -23,7 +23,7 @@ function Login() {
             const response = await login(email, password);
             if (response.data.success) {
                 // Save the token and user data in the context
-                setAuth({
+                setUser({
                     token: response.data.token, 
                     user: response.data.user
                 });

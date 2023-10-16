@@ -30,7 +30,7 @@ function NavBar(){
             <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="me-auto" activeKey={location.pathname}>
                     <Nav.Link as={NavLink} to="/home" data-tooltip="Home Page">Home</Nav.Link>
-                    <Nav.Link as={NavLink} to="/createaccount" data-tooltip="Create Account Page">Create Account</Nav.Link>
+                    <Nav.Link as={NavLink} to="/createuser" data-tooltip="Create User Page">Create User</Nav.Link>
                     {!user && <Nav.Link as={NavLink} to="/login" data-tooltip="Login Page">Login</Nav.Link>}
                     {user && (
                         <>

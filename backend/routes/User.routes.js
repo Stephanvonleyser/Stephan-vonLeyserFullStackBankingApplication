@@ -10,8 +10,8 @@ const router = express.Router()
 
 
 //Area Pública en react
-router.post("/createuser", createNewUser)
-router.post("/login", authUser)
+router.post("/createuser", createNewUser);  // For creating a new user
+router.post("/login", authUser);  // For logging in
 
 
 //Rutas privadas
@@ -19,9 +19,9 @@ router.get('/profile', checkAuth, userProfile) //check
 router.get('/user-profile', checkAuth, otherProfile) //check
 
 
-router.post('/deposit', checkAuth, deposit);
-router.post('/withdraw', checkAuth, withdraw);
-router.post('/transfer', checkAuth, transfer);
+router.post('/account/deposit', checkAuth, deposit);
+router.post('/account/withdraw', checkAuth, withdraw);
+router.post('/account/transfer', checkAuth, transfer);
 
 
 //Rutas privadas Admin
