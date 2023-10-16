@@ -2,7 +2,7 @@ import clientAxios from '../../clientAxios'
 
 export const sendNewUser = async data => {
     try {
-        const response = await clientAxios.post(`/createuser`, data);
+        const response = await clientAxios.post(`/user/createuser`, data);
         return { data: response.data, error: null };
     } catch (error) {
         return { data: null, error: error.response?.data?.message || "An error occurred" };
